@@ -51,7 +51,7 @@
         <input name="location" placeholder="Lugar"><input name="category" value="EVENTO"><input name="image" placeholder="Imagen (URL)"><textarea name="description" placeholder="Descripción"></textarea>
         <label class="check"><input type="checkbox" name="featured"> Destacado</label><button class="btn primary">{{site.new_event}}</button>
       </form>
-      <div class="admin-box"><h3>Eventos publicados</h3>{% for e in events %}<div class="admin-row"><span><b>{{e.title}}</b><small>{{e.date or 'Sin fecha'}} · {{e.category}}</small></span><form method="post" action="{{url_for('del_event',i=e.id)}}"><button class="danger">Eliminar</button></form></div>{% else %}<div class="empty">No hay eventos.</div>{% endfor %}</div>
+      <div class="admin-box"><h3>Eventos publicados</h3>{% for e in events %}<div class="admin-row"><span><b>{{e.title}}</b><small>{{e.date or 'Sin fecha'}} · {{e.category}}</small></span><form method="post" action="{{url_for('delete_event',event_id=e.id)}}"><button class="danger">Eliminar</button></form></div>{% else %}<div class="empty">No hay eventos.</div>{% endfor %}</div>
     </div>
   </section>
 
