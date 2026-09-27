@@ -64,7 +64,7 @@
         <p class="form-note">Puedes pegar 5, 20, 50 o más URLs. Cada línea se convierte en una foto.</p>
         <button class="btn primary">{{site.add_gallery}}</button>
       </form>
-      <div class="admin-box"><h3>Fotografías publicadas</h3>{% for g in gallery %}<div class="admin-row"><span><b>{{g.section}}</b><small>{{g.title or 'Sin título'}}</small></span><form method="post" action="{{url_for('del_gallery',i=g.id)}}"><button class="danger">Eliminar</button></form></div>{% else %}<div class="empty">No hay fotografías.</div>{% endfor %}</div>
+      <div class="admin-box"><h3>Fotografías publicadas</h3>{% for g in gallery %}<div class="admin-row"><span><b>{{g.section}}</b><small>{{g.title or 'Sin título'}}</small></span><form method="post" action="{{ url_for('delete_gallery', i.id) }}"><button class="danger">Eliminar</button></form></div>{% else %}<div class="empty">No hay fotografías.</div>{% endfor %}</div>
     </div>
   </section>
 
