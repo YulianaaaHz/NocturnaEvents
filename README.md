@@ -1,6 +1,6 @@
-# Nocturna Events PRO
+# Nocturna Events
 
-Web profesional para GTAHUB con Flask.
+Pagina WEB sobre bailarinas de GTAHUB en la ciudad de Los Santos. 
 
 ## Render
 Build: `pip install -r requirements.txt`
