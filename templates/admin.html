@@ -1,1 +1,86 @@
-{% extends 'base.html' %}{% block content %}<section class="page"><span class="eyebrow">CONTROL CENTER</span><h1>{{site.admin_title}}</h1><p>Todo lo principal de la web se puede editar desde aquí.</p><a href="/logout">Cerrar sesión →</a></section><section class="admin"><form class="box" method="post" action="/admin/settings"><h2>Todos los textos y apariencia</h2>{% for k in ['site_name','logo_text','nav_home','nav_events','nav_gallery','nav_about','nav_quote','discord_button','hero_eyebrow','hero_title','tagline','description','hero_button','events_title','events_link','about_title','about_text','gallery_title','gallery_link','quote_title','quote_intro','quote_button','footer_text'] %}<label>{{k}}<input name="{{k}}" value="{{site[k]}}"></label>{% endfor %}<label>Discord URL<input name="discord_url" value="{{site.discord_url}}"></label><label>Color principal<input name="primary_color" value="{{site.primary_color}}"></label><label>Color secundario<input name="secondary_color" value="{{site.secondary_color}}"></label><label>Imagen de portada URL<input name="hero_image" value="{{site.hero_image}}"></label><button class="btn">GUARDAR TODO</button></form><div><form class="box" method="post" action="/admin/event/new"><h2>Nuevo evento</h2><input name="title" placeholder="Título" required><input name="date" placeholder="Fecha"><input name="time" placeholder="Hora"><input name="location" placeholder="Lugar"><input name="category" placeholder="Categoría" value="EVENTO"><input name="image" placeholder="Imagen URL"><textarea name="description" placeholder="Descripción"></textarea><button class="btn">PUBLICAR</button></form><div class="box"><h2>Galería — carga masiva</h2><p class="hint">Crea un álbum y pega una URL por línea. Puedes poner 5, 20 o 100 fotos en una sola acción.</p><form method="post" action="/admin/gallery/bulk"><input name="section" placeholder="Nombre del álbum / sección" required><input name="title" placeholder="Título de las fotos"><textarea name="images" rows="10" placeholder="https://imagen1.jpg&#10;https://imagen2.jpg&#10;https://imagen3.jpg"></textarea><button class="btn">AGREGAR FOTOS</button></form></div><div class="box"><h2>Cotizaciones</h2>{% for q in quotes %}<div class="request"><b>{{q.name}}</b> — {{q.event_type}}<small>{{q.event_date}} · {{q.contact}}</small><p>{{q.details}}</p><form method="post" action="/admin/quote/{{q.id}}/status"><select name="status"><option>Pendiente</option><option>En revisión</option><option>Aceptada</option><option>Rechazada</option></select><button>Actualizar</button></form></div>{% else %}<p>No hay solicitudes.</p>{% endfor %}</div></div></section>{% endblock %}
+{% extends "base.html" %}
+{% block title %}Panel · {{site.site_name}}{% endblock %}
+{% block content %}
+<section class="page-head admin-head"><span class="eyebrow">CONTROL CENTER</span><h1>{{site.admin_title}}</h1><p>{{site.admin_subtitle}}</p><a class="text-btn" href="{{url_for('logout')}}">CERRAR SESIÓN →</a></section>
+<section class="admin-shell">
+  <div class="admin-tabs">
+    <button class="admin-tab active" data-tab="general">⚙ General</button>
+    <button class="admin-tab" data-tab="design">✦ Diseño</button>
+    <button class="admin-tab" data-tab="events">✦ Eventos</button>
+    <button class="admin-tab" data-tab="gallery">▧ Galería</button>
+    <button class="admin-tab" data-tab="quotes">◆ Cotizaciones</button>
+    <button class="admin-tab" data-tab="security">⌘ Seguridad</button>
+  </div>
+
+  <section class="admin-panel active" id="tab-general">
+    <div class="panel-intro"><span class="eyebrow">GENERAL</span><h2>Textos de la página</h2><p>Cambia los textos visibles de Nocturna sin tocar el código.</p></div>
+    <form class="admin-box" method="post" action="{{url_for('save_settings')}}">
+      <div class="settings-grid">
+      {% for k,label in [
+      ('site_name','Nombre del sitio'),('logo_text','Logo'),('nav_home','Menú Inicio'),('nav_events','Menú Eventos'),('nav_gallery','Menú Galería'),('nav_about','Menú Nosotros'),('nav_quote','Menú Cotización'),('nav_discord','Botón Discord'),
+      ('hero_eyebrow','Inicio — etiqueta'),('hero_title','Inicio — título'),('hero_tagline','Inicio — frase'),('hero_description','Inicio — descripción'),('hero_btn','Inicio — botón eventos'),('hero_discord','Inicio — botón Discord'),
+      ('events_eyebrow','Eventos — etiqueta'),('events_title','Eventos — título'),('events_link','Eventos — enlace'),
+      ('about_eyebrow','Nosotros — etiqueta'),('about_title','Nosotros — título'),('about_text','Nosotros — texto'),('about_btn','Nosotros — botón'),('quote_line','Frase destacada'),
+      ('gallery_eyebrow','Galería — etiqueta'),('gallery_title','Galería — título'),('gallery_link','Galería — enlace'),('gallery_empty','Galería — mensaje vacío'),
+      ('about_page_eyebrow','Nosotros — etiqueta de página'),('about_page_title','Nosotros — título de página'),('about_page_intro','Nosotros — introducción'),('about_subtitle','Nosotros — subtítulo'),('about_paragraph','Nosotros — párrafo 1'),('about_paragraph2','Nosotros — párrafo 2'),
+      ('quote_page_eyebrow','Cotización — etiqueta'),('quote_page_title','Cotización — título'),('quote_page_intro','Cotización — introducción'),('quote_name','Cotización — nombre'),('quote_type','Cotización — tipo'),('quote_date','Cotización — fecha'),('quote_time','Cotización — hora'),('quote_people','Cotización — personas'),('quote_location','Cotización — lugar'),('quote_budget','Cotización — presupuesto'),('quote_contact','Cotización — contacto'),('quote_details','Cotización — detalles'),('quote_select','Cotización — selector'),('quote_send','Cotización — botón enviar'),('quote_success','Cotización — mensaje de éxito'),
+      ('footer_text','Pie de página'),('login_title','Login — título'),('login_subtitle','Login — subtítulo'),('admin_title','Panel — título'),('admin_subtitle','Panel — subtítulo')
+      ] %}
+      <label>{{label}}<input name="{{k}}" value="{{site[k]}}"></label>
+      {% endfor %}
+      </div>
+      <button class="btn primary">{{site.save}}</button>
+    </form>
+  </section>
+
+  <section class="admin-panel" id="tab-design">
+    <div class="panel-intro"><span class="eyebrow">DISEÑO</span><h2>Identidad visual</h2><p>Controla colores, portada y Discord.</p></div>
+    <form class="admin-box" method="post" action="{{url_for('save_settings')}}">
+      <label>Discord URL<input name="discord_url" value="{{site.discord_url}}"></label>
+      <div class="color-grid"><label>Color principal<input name="primary_color" value="{{site.primary_color}}"></label><label>Color secundario<input name="secondary_color" value="{{site.secondary_color}}"></label></div>
+      <label>Imagen de portada (URL)<input name="hero_image" value="{{site.hero_image}}"></label>
+      <button class="btn primary">{{site.save}}</button>
+    </form>
+  </section>
+
+  <section class="admin-panel" id="tab-events">
+    <div class="panel-intro"><span class="eyebrow">EVENTOS</span><h2>Agenda de Nocturna</h2><p>Publica fiestas, privados y experiencias.</p></div>
+    <div class="admin-two">
+      <form class="admin-box" method="post" action="{{url_for('new_event')}}"><h3>Nuevo evento</h3>
+        <input name="title" placeholder="Nombre del evento" required><div class="two"><input name="date" placeholder="Fecha"><input name="time" placeholder="Hora"></div>
+        <input name="location" placeholder="Lugar"><input name="category" value="EVENTO"><input name="image" placeholder="Imagen (URL)"><textarea name="description" placeholder="Descripción"></textarea>
+        <label class="check"><input type="checkbox" name="featured"> Destacado</label><button class="btn primary">{{site.new_event}}</button>
+      </form>
+      <div class="admin-box"><h3>Eventos publicados</h3>{% for e in events %}<div class="admin-row"><span><b>{{e.title}}</b><small>{{e.date or 'Sin fecha'}} · {{e.category}}</small></span><form method="post" action="{{url_for('del_event',i=e.id)}}"><button class="danger">Eliminar</button></form></div>{% else %}<div class="empty">No hay eventos.</div>{% endfor %}</div>
+    </div>
+  </section>
+
+  <section class="admin-panel" id="tab-gallery">
+    <div class="panel-intro"><span class="eyebrow">GALERÍA</span><h2>Álbumes y fotografías</h2><p>Crea secciones y añade muchas fotos de una sola vez.</p></div>
+    <div class="admin-two">
+      <form class="admin-box" method="post" action="{{url_for('gallery_bulk')}}"><h3>Nuevo álbum / sección</h3>
+        <input name="section" placeholder="Ej. Summer Night 2026" required><input name="title" placeholder="Título de las fotos">
+        <textarea name="images" rows="12" placeholder="UNA URL POR LÍNEA&#10;https://...&#10;https://...&#10;https://..."></textarea>
+        <p class="form-note">Puedes pegar 5, 20, 50 o más URLs. Cada línea se convierte en una foto.</p>
+        <button class="btn primary">{{site.add_gallery}}</button>
+      </form>
+      <div class="admin-box"><h3>Fotografías publicadas</h3>{% for g in gallery %}<div class="admin-row"><span><b>{{g.section}}</b><small>{{g.title or 'Sin título'}}</small></span><form method="post" action="{{url_for('del_gallery',i=g.id)}}"><button class="danger">Eliminar</button></form></div>{% else %}<div class="empty">No hay fotografías.</div>{% endfor %}</div>
+    </div>
+  </section>
+
+  <section class="admin-panel" id="tab-quotes">
+    <div class="panel-intro"><span class="eyebrow">COTIZACIONES</span><h2>Solicitudes de clientes</h2><p>Revisa las solicitudes enviadas desde la web.</p></div>
+    {% for q in quotes %}
+    <article class="quote-card"><div class="quote-top"><div><span class="pill">{{q.status}}</span><h3>{{q.name}}</h3><small>{{q.event_type}} · {{q.event_date or 'Sin fecha'}} · {{q.event_time or 'Sin hora'}}</small></div><form method="post" action="{{url_for('del_quote',i=q.id)}}"><button class="danger">Eliminar</button></form></div>
+    <div class="quote-data"><span>👥 <b>{{q.people or '—'}}</b></span><span>📍 <b>{{q.location or '—'}}</b></span><span>💰 <b>{{q.budget or '—'}}</b></span><span>💬 <b>{{q.contact}}</b></span></div><p>{{q.details or 'Sin detalles adicionales.'}}</p>
+    <form class="status-form" method="post" action="{{url_for('quote_status',i=q.id)}}"><select name="status">{% for s in [site.status_pending,site.status_review,site.status_accepted,site.status_rejected] %}<option {% if q.status==s %}selected{% endif %}>{{s}}</option>{% endfor %}</select><button class="btn mini">ACTUALIZAR ESTADO</button></form></article>
+    {% else %}<div class="empty">No hay solicitudes de cotización.</div>{% endfor %}
+  </section>
+
+  <section class="admin-panel" id="tab-security">
+    <div class="panel-intro"><span class="eyebrow">SEGURIDAD</span><h2>Acceso al panel</h2><p>Cambia el usuario y contraseña de administración.</p></div>
+    <form class="admin-box" method="post" action="{{url_for('password')}}"><label>Nuevo usuario<input name="username" required></label><label>Nueva contraseña<input name="password" type="password" required></label><button class="btn primary">ACTUALIZAR ACCESO</button></form>
+    <div class="security-note"><b>Consejo:</b> usa una contraseña larga y diferente a otras cuentas.</div>
+  </section>
+</section>
+{% endblock %}
