@@ -90,9 +90,20 @@ def evento(event_id):
 @app.route("/galeria")
 def galeria():
     con = db()
-    gallery = con.execute("SELECT * FROM gallery ORDER BY id DESC").fetchall()
+
+    rows = con.execute(
+        "SELECT * FROM gallery ORDER BY section, id DESC"
+    ).fetchall()
+
     con.close()
-    return render_template("gallery.html", gallery=gallery)
+
+    groups = {}
+
+    for item in rows:
+        section = item["section"] or "Nocturna Moments"
+        groups.setdefault(section, []).append(item)
+
+    return render_template("gallery.html", groups=groups)
 
 @app.route("/nosotros")
 def nosotros():
