@@ -29,3 +29,13 @@
     color: #aaa8b6;
     font-size: 14px;
 }
+.card-description {
+    color: #9e9aa9;
+    font-size: 13px;
+    line-height: 1.7;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    min-height: 66px;
+}
