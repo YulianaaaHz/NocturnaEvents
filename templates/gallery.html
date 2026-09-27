@@ -1,1 +1,22 @@
-{% extends 'base.html' %}{% block content %}<section class="page"><span class="eyebrow">NOCTURNA MOMENTS</span><h1>{{site.gallery_title}}</h1><p>Explora nuestras noches, fiestas y eventos.</p></section><section class="section">{% for section,items in groups.items() %}<div class="album"><div class="head"><h2>{{section}}</h2><span>{{items|length}} fotos</span></div><div class="gallery">{% for g in items %}<div style="background-image:url('{{g.image}}')"><span>{{g.title}}</span></div>{% endfor %}</div></div>{% else %}<div class="empty">Aún no hay fotografías.</div>{% endfor %}</section>{% endblock %}
+{% extends 'base.html' %}
+{% block content %}
+<section class="page">
+  <span class="eyebrow">{{site.gallery_eyebrow}}</span>
+  <h1>{{site.gallery_title}}</h1>
+  <p>Explora nuestras noches, fiestas y eventos.</p>
+</section>
+<section class="section">
+  {% for section,items in groups.items() %}
+  <div class="album">
+    <div class="head"><h2>{{section}}</h2><span>{{items|length}} fotos</span></div>
+    <div class="gallery">
+      {% for g in items %}
+      <div style="background-image:url('{{g.image}}')" title="{{g.title}}">
+        <span>{{g.title or section}}</span>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% else %}<div class="empty">{{site.gallery_empty}}</div>{% endfor %}
+</section>
+{% endblock %}

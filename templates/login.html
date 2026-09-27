@@ -1,1 +1,5 @@
-{% extends 'base.html' %}{% block content %}<section class="login"><form class="box" method="post"><span class="eyebrow">CONTROL CENTER</span><h1>Administración</h1><input name="username" placeholder="Usuario" required><input name="password" type="password" placeholder="Contraseña" required><button class="btn">ENTRAR</button></form></section>{% endblock %}
+{% extends 'base.html' %}
+{% block title %}{{site.admin_title}} · {{site.site_name}}{% endblock %}
+{% block content %}
+<section class="login"><form class="box" method="post"><span class="eyebrow">CONTROL CENTER</span><h1>{{site.admin_title}}</h1><input name="username" placeholder="Usuario" required><input name="password" type="password" placeholder="Contraseña" required><button class="btn">ENTRAR</button></form></section>
+{% endblock %}

@@ -3,6 +3,6 @@
 {% block content %}
 <section class="event-detail">
 {% if event.image %}<div class="detail-image" style="background-image:url('{{event.image}}')"></div>{% endif %}
-<div class="detail-copy"><span class="pill">{{event.category}}</span><h1>{{event.title}}</h1><div class="event-description">{{event.description}}</div><div class="info-grid"><div>📅 <b>Fecha</b><span>{{event.date or 'Por anunciar'}}</span></div><div>🕐 <b>Hora</b><span>{{event.time or 'Por anunciar'}}</span></div><div>📍 <b>Lugar</b><span>{{event.location or 'GTAHUB'}}</span></div></div><a class="btn primary" href="{{site.discord_url}}" target="_blank">QUIERO ASISTIR ↗</a></div>
+<div class="detail-copy"><span class="pill">{{event.category}}</span><h1>{{event.title}}</h1><p class="lead">{{event.description}}</p><div class="info-grid"><div>📅 <b>Fecha</b><span>{{event.date or 'Por anunciar'}}</span></div><div>🕐 <b>Hora</b><span>{{event.time or 'Por anunciar'}}</span></div><div>📍 <b>Lugar</b><span>{{event.location or 'GTAHUB'}}</span></div></div><a class="btn primary" href="{{site.discord_url}}" target="_blank" rel="noopener">QUIERO ASISTIR ↗</a></div>
 </section>
 {% endblock %}

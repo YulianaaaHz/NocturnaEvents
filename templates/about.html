@@ -1,6 +1,9 @@
 {% extends "base.html" %}
-{% block title %}Nosotros · {{site.site_name}}{% endblock %}
+{% block title %}{{site.nav_about}} · {{site.site_name}}{% endblock %}
 {% block content %}
-<section class="page-head"><span class="eyebrow">QUIÉNES SOMOS</span><h1>Nosotros</h1><p>{{site.description}}</p></section>
-<section class="split about"><div><h2>Más que una fiesta.</h2><p>Nos gusta crear ambientes donde la gente pueda desconectarse, bailar, conocer personas y disfrutar de GTAHUB de una manera diferente.</p><p>Desde fiestas abiertas hasta privados personalizados, <b>Nocturna Events</b> busca convertir cada noche en un recuerdo.</p></div><div class="quote">Música.<br>Comunidad.<br><strong>Noches inolvidables.</strong></div></section>
+<section class="page-head"><span class="eyebrow">{{site.about_eyebrow}}</span><h1>{{site.nav_about}}</h1><p>{{site.description}}</p></section>
+<section class="split about">
+  <div><h2>{{site.about_title}}</h2><p>{{site.about_text}}</p><p><b>{{site.site_name}}</b> busca convertir cada noche en un recuerdo.</p></div>
+  <div class="quote">{{site.quote_line}}</div>
+</section>
 {% endblock %}
