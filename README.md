@@ -1,45 +1,17 @@
-# NOCTURNA EVENTS
+# Nocturna Events PRO
 
-Web completa para una comunidad/eventos de GTAHUB, hecha con Python + Flask + SQLite.
+Web profesional para GTAHUB con Flask.
 
-## Instalar
-
-```bash
-pip install -r requirements.txt
-python app.py
-```
-
-Abre: http://127.0.0.1:5000
+## Render
+Build: `pip install -r requirements.txt`
+Start: `gunicorn app:app`
 
 ## Panel
-
-Entra a:
-
 `/login`
+Usuario inicial: `admin`
+Contraseña inicial: `cambia-esta-clave`
 
-Usuario inicial:
-- usuario: `admin`
-- contraseña: `cambia-esta-clave`
+Desde el panel puedes cambiar los textos principales, colores, portada, Discord, eventos, galería y revisar cotizaciones.
 
-**Cámbiala inmediatamente desde el panel.**
-
-## Personalización
-
-Desde `/admin` puedes cambiar:
-- Nombre de la web
-- Logo
-- Frase principal
-- Descripción
-- Discord
-- Imagen de portada
-- Colores
-- Pie de página
-- Eventos
-- Fechas y horarios
-- Ubicaciones
-- Categorías
-- Imágenes de eventos
-- Galería
-- Credenciales del administrador
-
-Las imágenes se pueden poner mediante URL. Si quieres subir imágenes directamente desde el panel, se puede añadir un sistema de subida de archivos.
+## Galería
+Para agregar muchas fotos a la vez, crea un álbum y pega una URL por línea. Puedes agregar más de 5 en una sola operación.

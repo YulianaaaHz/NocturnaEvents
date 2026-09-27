@@ -1,5 +1,1 @@
-document.addEventListener("DOMContentLoaded",()=>{
-  document.querySelectorAll("a[href^='#']").forEach(a=>a.addEventListener("click",e=>{
-    const el=document.querySelector(a.getAttribute("href")); if(el){e.preventDefault();el.scrollIntoView({behavior:"smooth"});}
-  }));
-});
+document.addEventListener('DOMContentLoaded',()=>{const t=document.querySelector('.toast');if(t)setTimeout(()=>t.remove(),4500)});

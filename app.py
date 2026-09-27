@@ -6,16 +6,14 @@ app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY", secrets.token_hex(32))
 DB = os.path.join(os.path.dirname(__file__), "nocturna.db")
 
+TEXT_KEYS = [
+"site_name","logo_text","tagline","description","hero_eyebrow","hero_title","hero_button","discord_button","events_title","events_link","about_title","about_text","gallery_title","gallery_link","quote_title","quote_intro","quote_button","footer_text","nav_home","nav_events","nav_gallery","nav_about","nav_quote","admin_title"
+]
+
 DEFAULT_SETTINGS = {
-    "site_name": "NOCTURNA EVENTS",
-    "tagline": "La noche comienza aquí.",
-    "description": "Somos un grupo de personas que disfrutamos de la noche, la música y los buenos momentos dentro de GTAHUB. Organizamos fiestas, eventos y privados para crear experiencias diferentes.",
-    "discord_url": "https://discord.gg/tu-servidor",
-    "primary_color": "#8b5cf6",
-    "secondary_color": "#11111b",
-    "hero_image": "",
-    "logo_text": "NOCTURNA",
-    "footer_text": "NOCTURNA EVENTS • GTAHUB",
+    "site_name":"NOCTURNA EVENTS","logo_text":"NOCTURNA","tagline":"La noche comienza aquí.","description":"Somos un grupo de personas que disfrutamos de la noche, la música y los buenos momentos dentro de GTAHUB.","discord_url":"https://discord.gg/tu-servidor","primary_color":"#9b6cff","secondary_color":"#161126","hero_image":"","footer_text":"© 2026 NOCTURNA EVENTS • La noche se vive diferente.",
+    "nav_home":"Inicio","nav_events":"Eventos","nav_gallery":"Galería","nav_about":"Nosotros","nav_quote":"Cotización","discord_button":"DISCORD",
+    "hero_eyebrow":"GTAHUB • COMMUNITY • EVENTS","hero_title":"NOCTURNA EVENTS","hero_button":"VER EVENTOS","events_title":"Eventos destacados","events_link":"Ver todos →","about_title":"La noche se vive diferente.","about_text":"Creamos fiestas, eventos y privados dentro de GTAHUB para disfrutar, bailar y compartir con la comunidad.","gallery_title":"Galería","gallery_link":"Ver galería →","quote_title":"Haz realidad tu evento.","quote_intro":"Cuéntanos qué tienes en mente y nuestro equipo preparará una propuesta para ti.","quote_button":"SOLICITAR COTIZACIÓN","admin_title":"Panel de administración"
 }
 
 def db():
@@ -34,10 +32,8 @@ def init_db():
         description TEXT, image TEXT, category TEXT DEFAULT 'EVENTO',
         featured INTEGER DEFAULT 0
     )""")
-    con.execute("""CREATE TABLE IF NOT EXISTS gallery (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        title TEXT, image TEXT NOT NULL
-    )""")
+    con.execute("""CREATE TABLE IF NOT EXISTS gallery (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, image TEXT NOT NULL, section TEXT DEFAULT 'Nocturna Moments')""")
+    con.execute("""CREATE TABLE IF NOT EXISTS quotes (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, event_type TEXT, event_date TEXT, event_time TEXT, people TEXT, location TEXT, budget TEXT, contact TEXT, details TEXT, status TEXT DEFAULT 'Pendiente')""")
     con.execute("""CREATE TABLE IF NOT EXISTS admin (
         id INTEGER PRIMARY KEY CHECK(id=1),
         username TEXT NOT NULL, password TEXT NOT NULL
@@ -102,6 +98,25 @@ def galeria():
 def nosotros():
     return render_template("about.html")
 
+@app.route("/cotizacion", methods=["GET","POST"])
+def cotizacion():
+    if request.method == "POST":
+        con=db(); con.execute("INSERT INTO quotes(name,event_type,event_date,event_time,people,location,budget,contact,details) VALUES(?,?,?,?,?,?,?,?,?)", tuple(request.form.get(k,"") for k in ["name","event_type","event_date","event_time","people","location","budget","contact","details"])); con.commit(); con.close(); flash("Tu solicitud fue enviada correctamente."); return redirect(url_for("cotizacion"))
+    return render_template("quote.html")
+
+@app.route("/admin/gallery/bulk", methods=["POST"])
+@admin_required
+def gallery_bulk():
+    urls=[x.strip() for x in request.form.get("images","").splitlines() if x.strip()]; section=request.form.get("section") or "Nocturna Moments"; title=request.form.get("title","")
+    con=db()
+    for u in urls: con.execute("INSERT INTO gallery(title,image,section) VALUES(?,?,?)",(title,u,section))
+    con.commit(); con.close(); flash(f"{len(urls)} fotos agregadas."); return redirect(url_for("admin"))
+
+@app.route("/admin/quote/<int:i>/status", methods=["POST"])
+@admin_required
+def quote_status(i):
+    con=db(); con.execute("UPDATE quotes SET status=? WHERE id=?",(request.form["status"],i)); con.commit(); con.close(); return redirect(url_for("admin"))
+
 @app.route("/login", methods=["GET","POST"])
 def login():
     if request.method == "POST":
@@ -124,9 +139,10 @@ def logout():
 def admin():
     con = db()
     events = con.execute("SELECT * FROM events ORDER BY id DESC").fetchall()
-    gallery = con.execute("SELECT * FROM gallery ORDER BY id DESC").fetchall()
+    gallery = con.execute("SELECT * FROM gallery ORDER BY section,id DESC").fetchall()
+    quotes = con.execute("SELECT * FROM quotes ORDER BY id DESC").fetchall()
     con.close()
-    return render_template("admin.html", events=events, gallery=gallery)
+    return render_template("admin.html", events=events, gallery=gallery, quotes=quotes)
 
 @app.route("/admin/settings", methods=["POST"])
 @admin_required
