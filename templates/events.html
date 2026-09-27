@@ -1,9 +1,102 @@
 {% extends "base.html" %}
+
 {% block title %}Eventos · {{site.site_name}}{% endblock %}
+
 {% block content %}
-<section class="page-head"><span class="eyebrow">AGENDA</span><h1>Eventos</h1><p>Fiestas, reuniones y experiencias dentro de GTAHUB.</p></section>
-<section class="section"><div class="cards">
-{% for e in events %}<article class="card">{% if e.image %}<div class="card-image" style="background-image:url('{{e.image}}')"></div>{% else %}<div class="card-image placeholder"><span>☾</span></div>{% endif %}<div class="card-body"><span class="pill">{{e.category}}</span><h3>{{e.title}}</h3><p class="card-description">{{e.description|truncate(180, True, '…')}}</p><div class="meta">📅 {{e.date or 'Por anunciar'}} · {{e.time or 'Por anunciar'}}<br>📍 {{e.location or 'GTAHUB'}}</div><a class="text-btn" href="{{url_for('evento',event_id=e.id)}}">DETALLES →</a></div></article>
-{% else %}<div class="empty">No hay eventos todavía.</div>{% endfor %}
-</div></section>
+
+<section class="events-hero">
+    <div>
+        <span class="eyebrow">{{site.events_eyebrow}}</span>
+        <h1>{{site.events_title}}</h1>
+        <p>{{site.hero_description}}</p>
+    </div>
+</section>
+
+<section class="events-section">
+
+    <div class="events-toolbar">
+        <div>
+            <span class="events-count">{{ events|length }} EVENTOS</span>
+        </div>
+
+        <a href="{{ url_for('cotizacion') }}" class="events-request">
+            ◆ SOLICITAR COTIZACIÓN
+        </a>
+    </div>
+
+    <div class="events-grid">
+
+        {% for e in events %}
+
+        <article class="event-card">
+
+            {% if e.image %}
+            <div class="event-card-image"
+                 style="background-image:url('{{e.image}}');">
+                <span class="event-category">{{e.category}}</span>
+            </div>
+            {% else %}
+            <div class="event-card-image no-image">
+                <span class="event-category">{{e.category}}</span>
+                <span class="event-symbol">✦</span>
+            </div>
+            {% endif %}
+
+            <div class="event-card-content">
+
+                <h2>{{e.title}}</h2>
+
+                <p class="event-summary">
+                    {{e.description|truncate(150, True, '…')}}
+                </p>
+
+                <div class="event-info">
+
+                    <div class="event-info-item">
+                        <span>📅</span>
+                        <div>
+                            <small>FECHA</small>
+                            <strong>{{e.date or 'Por anunciar'}}</strong>
+                        </div>
+                    </div>
+
+                    <div class="event-info-item">
+                        <span>🕐</span>
+                        <div>
+                            <small>HORA</small>
+                            <strong>{{e.time or 'Por anunciar'}}</strong>
+                        </div>
+                    </div>
+
+                    <div class="event-info-item">
+                        <span>📍</span>
+                        <div>
+                            <small>LUGAR</small>
+                            <strong>{{e.location or 'GTAHUB'}}</strong>
+                        </div>
+                    </div>
+
+                </div>
+
+                <a href="{{url_for('evento',event_id=e.id)}}" class="event-btn">
+                    VER DETALLES <span>→</span>
+                </a>
+
+            </div>
+
+        </article>
+
+        {% else %}
+
+        <div class="events-empty">
+            <div>✦</div>
+            <h2>No hay eventos publicados</h2>
+            <p>Próximamente encontrarás nuevas experiencias de Nocturna Events.</p>
+        </div>
+
+        {% endfor %}
+
+    </div>
+</section>
+
 {% endblock %}
