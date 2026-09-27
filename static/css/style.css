@@ -39,3 +39,9 @@
     overflow: hidden;
     min-height: 66px;
 }
+.event-description {
+    white-space: pre-line;
+    color: #aaa8b6;
+    line-height: 1.9;
+    font-size: 15px;
+}
