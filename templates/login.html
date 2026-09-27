@@ -1,0 +1,5 @@
+{% extends "base.html" %}
+{% block title %}Acceso · {{site.site_name}}{% endblock %}
+{% block content %}
+<section class="login-wrap"><form class="admin-box" method="post"><span class="eyebrow">PANEL PRIVADO</span><h1>Administración</h1><input name="username" placeholder="Usuario" required><input name="password" type="password" placeholder="Contraseña" required><button class="btn primary">ENTRAR</button>{% with messages=get_flashed_messages() %}{% for m in messages %}<p class="error">{{m}}</p>{% endfor %}{% endwith %}</form></section>
+{% endblock %}

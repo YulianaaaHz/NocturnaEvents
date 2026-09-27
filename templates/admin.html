@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Panel · {{site.site_name}}{% endblock %}
+{% block content %}
+<section class="page-head"><span class="eyebrow">CONTROL CENTER</span><h1>Panel de administración</h1><p>Todo lo importante de Nocturna se puede cambiar desde aquí.</p><a class="text-btn" href="{{url_for('logout')}}">CERRAR SESIÓN →</a></section>
+<section class="admin-grid">
+<form class="admin-box" method="post" action="{{url_for('save_settings')}}"><h2>Configuración general</h2>
+{% for key,label,type in [('site_name','Nombre','text'),('logo_text','Logo','text'),('tagline','Frase principal','text'),('description','Descripción','textarea'),('discord_url','Discord','text'),('hero_image','Imagen de portada (URL)','text'),('primary_color','Color principal','text'),('secondary_color','Color secundario','text'),('footer_text','Pie de página','text')] %}
+<label>{{label}}</label>{% if type=='textarea' %}<textarea name="{{key}}">{{site[key]}}</textarea>{% else %}<input name="{{key}}" value="{{site[key]}}">{% endif %}
+{% endfor %}<button class="btn primary">GUARDAR CAMBIOS</button></form>
+
+<div>
+<form class="admin-box" method="post" action="{{url_for('new_event')}}"><h2>Nuevo evento</h2><input name="title" placeholder="Nombre del evento" required><div class="two"><input name="date" placeholder="Fecha"><input name="time" placeholder="Hora"></div><input name="location" placeholder="Lugar"><input name="category" placeholder="Categoría" value="EVENTO"><input name="image" placeholder="Imagen (URL)"><textarea name="description" placeholder="Descripción"></textarea><label class="check"><input type="checkbox" name="featured"> Destacado</label><button class="btn primary">PUBLICAR EVENTO</button></form>
+<div class="admin-box"><h2>Eventos publicados</h2>{% for e in events %}<div class="admin-row"><span><b>{{e.title}}</b><small>{{e.date}} · {{e.category}}</small></span><form method="post" action="{{url_for('delete_event',event_id=e.id)}}"><button class="danger">Eliminar</button></form></div>{% else %}<p>No hay eventos.</p>{% endfor %}</div>
+</div>
+
+<div>
+<form class="admin-box" method="post" action="{{url_for('new_gallery')}}"><h2>Agregar imagen</h2><input name="title" placeholder="Título"><input name="image" placeholder="URL de imagen" required><button class="btn primary">AGREGAR A GALERÍA</button></form>
+<div class="admin-box"><h2>Galería</h2>{% for g in gallery %}<div class="admin-row"><span><b>{{g.title or 'Sin título'}}</b></span><form method="post" action="{{url_for('delete_gallery',item_id=g.id)}}"><button class="danger">Eliminar</button></form></div>{% else %}<p>No hay imágenes.</p>{% endfor %}</div>
+<form class="admin-box" method="post" action="{{url_for('password')}}"><h2>Seguridad</h2><input name="username" placeholder="Nuevo usuario" required><input name="password" type="password" placeholder="Nueva contraseña" required><button class="btn primary">ACTUALIZAR ACCESO</button></form>
+</div>
+</section>
+{% endblock %}

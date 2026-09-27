@@ -1,0 +1,6 @@
+{% extends "base.html" %}
+{% block title %}Galería · {{site.site_name}}{% endblock %}
+{% block content %}
+<section class="page-head"><span class="eyebrow">NOCTURNA MOMENTS</span><h1>Galería</h1><p>Momentos de nuestra comunidad en GTAHUB.</p></section>
+<section class="section"><div class="gallery-grid large">{% for g in gallery %}<div class="gallery-item" style="background-image:url('{{g.image}}')"><span>{{g.title}}</span></div>{% else %}<div class="empty">Agrega imágenes desde el panel de administración.</div>{% endfor %}</div></section>
+{% endblock %}

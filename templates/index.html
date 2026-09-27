@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="hero" {% if site.hero_image %}style="background-image:linear-gradient(90deg,rgba(5,5,10,.98),rgba(5,5,10,.45)),url('{{site.hero_image}}')"{% endif %}>
+  <div class="hero-copy">
+    <div class="eyebrow">GTAHUB • COMMUNITY • EVENTS</div>
+    <h1>{{site.site_name}}</h1>
+    <p class="tagline">{{site.tagline}}</p>
+    <p class="lead">{{site.description}}</p>
+    <div class="actions"><a class="btn primary" href="{{url_for('eventos')}}">VER EVENTOS</a><a class="btn ghost" href="{{site.discord_url}}" target="_blank">UNIRME AL DISCORD</a></div>
+  </div>
+  <div class="moon-orb"><div class="orb"></div><div class="orb-glow"></div></div>
+</section>
+
+<section class="section">
+ <div class="section-head"><div><span class="eyebrow">PRÓXIMAMENTE</span><h2>Eventos destacados</h2></div><a href="{{url_for('eventos')}}">Ver todos →</a></div>
+ <div class="cards">
+ {% for e in events %}
+ <article class="card">
+   {% if e.image %}<div class="card-image" style="background-image:url('{{e.image}}')"></div>{% else %}<div class="card-image placeholder"><span>☾</span></div>{% endif %}
+   <div class="card-body"><span class="pill">{{e.category}}</span><h3>{{e.title}}</h3><p>{{e.description}}</p><div class="meta">📅 {{e.date or 'Fecha por anunciar'}} · {{e.time or 'Hora por anunciar'}}<br>📍 {{e.location or 'GTAHUB'}}</div><a class="text-btn" href="{{url_for('evento',event_id=e.id)}}">VER EVENTO →</a></div>
+ </article>
+ {% else %}<div class="empty">Aún no hay eventos publicados.</div>{% endfor %}
+ </div>
+</section>
+
+<section class="split">
+ <div><span class="eyebrow">NOCTURNA</span><h2>La noche se vive diferente.</h2><p>{{site.description}}</p><a class="text-btn" href="{{url_for('nosotros')}}">CONÓCENOS →</a></div>
+ <div class="quote">“Donde termina el día,<br><strong>comienza Nocturna.</strong>”</div>
+</section>
+
+{% if gallery %}
+<section class="section"><div class="section-head"><div><span class="eyebrow">MOMENTOS</span><h2>Galería</h2></div><a href="{{url_for('galeria')}}">Ver galería →</a></div>
+<div class="gallery-grid">{% for g in gallery[:6] %}<div class="gallery-item" style="background-image:url('{{g.image}}')"><span>{{g.title}}</span></div>{% endfor %}</div></section>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}Eventos · {{site.site_name}}{% endblock %}
+{% block content %}
+<section class="page-head"><span class="eyebrow">AGENDA</span><h1>Eventos</h1><p>Fiestas, reuniones y experiencias dentro de GTAHUB.</p></section>
+<section class="section"><div class="cards">
+{% for e in events %}<article class="card">{% if e.image %}<div class="card-image" style="background-image:url('{{e.image}}')"></div>{% else %}<div class="card-image placeholder"><span>☾</span></div>{% endif %}<div class="card-body"><span class="pill">{{e.category}}</span><h3>{{e.title}}</h3><p>{{e.description}}</p><div class="meta">📅 {{e.date or 'Por anunciar'}} · {{e.time or 'Por anunciar'}}<br>📍 {{e.location or 'GTAHUB'}}</div><a class="text-btn" href="{{url_for('evento',event_id=e.id)}}">DETALLES →</a></div></article>
+{% else %}<div class="empty">No hay eventos todavía.</div>{% endfor %}
+</div></section>
+{% endblock %}
